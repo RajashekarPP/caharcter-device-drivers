@@ -7,7 +7,7 @@ int majorno = MAJORNO;
 int minorno = 0 ;     // default we will assign 0 as minor number
 
 
-static int __init chardev_init(void)
+static int __init MyCharDev_init(void)
 {
 	printk(KERN_INFO "character device driver init started\n");
 	if(alloc_chrdev_region(&Dev_Id , 0 ,DEVNO , DEVNAME ) < 0)

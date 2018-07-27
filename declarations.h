@@ -25,4 +25,4 @@ extern int majorno;
 extern int minorno;
 extern int devicesCount;
 
-
+#endif
