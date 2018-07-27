@@ -9,8 +9,8 @@
 #define MAJORNO	0
 #endif
 
-#ifndef DEVNO
-#define DEVNO	5	//No of the devices
+#ifndef DEVCOUNT
+#define DEVCOUNT	1	//No of the devices
 #endif
 
 #ifndef SUCESS
