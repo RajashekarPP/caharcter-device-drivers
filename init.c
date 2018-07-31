@@ -13,20 +13,19 @@ int deviceno = DEVICE_COUNT;
 int no_of_registers = NUM_REGISTRES;
 int size_of_registers = SIZE_REGISTRES;
 
-struct myDev *myDevices;        /* allocated in scull_init_module */
+struct myDev *myDevices;        
+
 static struct file_operations fops = {
         open:openDev,
-        release:releaseDev,
+//        release:releaseDev,
         read:readDev,
         write:writeDev,
-        llseek:llseekDev
+//        llseek:llseekDev
 };
-
-
 
 static int __init MyCharDev_init(void)
 {
-	int ret , err, i;
+	int ret , err=0, i;
 	printk(KERN_INFO "character device driver init started\n");
 /*
 //This is the old method of  registering of the device
@@ -43,16 +42,16 @@ static int __init MyCharDev_init(void)
 	}
 
 	majorno = MAJOR(Dev_Id);
-        minorno = MINOR(Dev_Id);
-        printk(KERN_INFO "Major no = %d\tMinor No = %d\n",majorno,minorno);
-
+	minorno = MINOR(Dev_Id);
+	printk(KERN_INFO "Major no = %d\tMinor No = %d\n",majorno,minorno);
+	
 	myDevices = kmalloc(deviceno*sizeof(struct myDev) , GFP_KERNEL );
 	if(!myDevices)
 	{
-		ret = -ENOMEM;
+		ret = -1;
 		goto fail;
 	}
-
+	
 	memset(myDevices , 0 , deviceno*sizeof(struct myDev) );
 	for(i=0 ; i<deviceno ; i++)
 	{
@@ -60,7 +59,7 @@ static int __init MyCharDev_init(void)
 		myDevices[i].cdev.ops = &fops;
 		Dev_Id = MKDEV(majorno, i);
 		err = cdev_add (&myDevices[i].cdev, Dev_Id, 1);
-
+		
 		if (err)
 			printk(KERN_NOTICE "Error %d adding scull%d", err, i);
 		printk(KERN_INFO "majorno:%d minorno:%d\n",MAJOR(Dev_Id) , MINOR(Dev_Id));
