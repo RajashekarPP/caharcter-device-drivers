@@ -60,6 +60,17 @@ struct myDev
 	
 };
 
+/*
+static struct file_operations fops = {
+        open:openDev,
+//        release:releaseDev,
+        read:readDev,
+        write:writeDev,
+//        llseek:llseekDev
+};
+
+*/
+
 
 int deletemydevices(void);
 int openDev(struct inode *, struct file *);
