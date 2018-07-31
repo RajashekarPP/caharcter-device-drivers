@@ -1,16 +1,11 @@
 #include"cheaders.h"
 
-#define SUCESS 0
-#define FAIL 1
-
-
-
 int main()
 {
-	int choice ,fd,mode ;
+	int choice ,fd, mode ;
 	static int readmode , writemode ;
 	char msg[100] = "hello raja thanks for the application";
-	char msgbuf[100];
+	char msgbuf[100]={0}; //making th buffer to be empty
 
 	while(1)
 	{
@@ -56,7 +51,7 @@ int main()
 				}
 				else
 				{
-					puts("file not opende in readmode");
+					puts("file not opened in readmode");
 				}
 				break;
 			case 3 :
@@ -79,10 +74,9 @@ int main()
 				break;
 			case 5:
 				puts("exiting from process");
-				return SUCESS;
+				exit(0);
 			default : puts("Invalid choice"); break;
 
 		}//end of switch case
 	}//end of while loop
-	return SUCESS;
 }//end of main

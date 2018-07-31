@@ -22,6 +22,7 @@ int deletemydevices()
 	for( i=0 ; i<deviceno ; i++)
 	{
 		Dev_Id=MKDEV(majorno,i);
+		printk(KERN_INFO "%d\n",Dev_Id);
 		cdev_del(&myDevices[i].cdev);
 		unregister_chrdev_region(Dev_Id , 1);
 		printk(KERN_INFO "unregistering has been done\n");
