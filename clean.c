@@ -3,7 +3,6 @@
 
 extern dev_t Dev_Id;
 extern int majorno;
-extern int minorno;
 extern int deviceno;
 extern struct myDev *myDevices;
 

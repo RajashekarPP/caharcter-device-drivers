@@ -6,8 +6,8 @@
 ssize_t writeDev(struct file *filep, const char __user *buff, size_t count, loff_t *f_pos)
 {
 
-	int i,k,ret;
-	int no_of_qsets , no_of_quantums , byteswritten =0 ;//datasize = count;
+	int ret;
+	int byteswritten =0 ;//datasize = count;
 	struct myDev *device ;
 	struct myQset *head ; //head pointer used to store  the address of the first quantum set
 
@@ -25,48 +25,26 @@ ssize_t writeDev(struct file *filep, const char __user *buff, size_t count, loff
 		return -1;
 	}
 	// allocation of memory for only one quantum set
-	head = device->data = kmalloc (sizeof(struct myQset) , GFP_KERNEL) ;
-	memset ( head , 0 ,sizeof(struct myQset) );
-
-	no_of_qsets = count/((size_of_registers)*(no_of_registers));
-	if(  count%((size_of_registers)*(no_of_registers)))
-	{
-		no_of_qsets++;
-	}
+	head = device->data =kmalloc (sizeof(struct myQset) , GFP_KERNEL) ;
+	memset ( head , 0 , count);
 
 	if( !head)
 	{
 		return -1;
 	}
 
-	head->data = kmalloc ( no_of_registers * sizeof(char *) , GFP_KERNEL );
-	memset( head->data , 0 , no_of_registers *sizeof(char *));
+	head->data = kmalloc ( count , GFP_KERNEL );
+	memset( head->data , 0 , count );
 
-	no_of_quantums = count/size_of_registers;
-	for(i=0;i< 8;i++)
+	ret = copy_from_user( head->data , buff+byteswritten , strlen(buff) );
+	if(!ret)
 	{
-		head->data[i] = kmalloc( no_of_registers*(sizeof(char*)) , GFP_KERNEL);
-	}
-
-	for(k=0 ; k< (count/size_of_registers) ;k++)
-	{
-		ret = copy_from_user( (char*)head->data[k] , buff+byteswritten , size_of_registers);
-		if(!ret)
-		{
-			byteswritten += size_of_registers;
-			*f_pos = byteswritten;
-			count -= size_of_registers;
-		}
-	}
-	if( count % size_of_registers )
-	{
-		ret = copy_from_user ( (char *)head->data[k++] , buff+byteswritten , count);
-		byteswritten += count;
+		byteswritten += strlen(buff);
 		*f_pos = byteswritten;
+		count -= size_of_registers;
 	}
 
 	printk(KERN_INFO "Bytes written = %d\n",byteswritten);
-
 	device->size = byteswritten ;
 
 	printk(KERN_INFO "ENDS %s\n",__func__);

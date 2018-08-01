@@ -4,8 +4,8 @@ int main()
 {
 	int choice ,fd, mode ;
 	static int readmode , writemode ;
-	char msg[100] = "hello raja thanks for the application";
-	char msgbuf[100]={0}; //making th buffer to be empty
+	char writebuf[100] = "hello raja thanks   ";
+	char readbuf[100]={0}; //making th buffer to be empty
 
 	while(1)
 	{
@@ -22,32 +22,27 @@ int main()
 				scanf("%d",&mode);
 				switch(mode)
 				{
-					case 1:if((fd = open("./MyCharDev" , O_RDONLY)) < 0)
-					       {
-						       puts("unable to open file in read mode");break;
-					       }
+					case 1:fd = open("./MyCharDev" , O_RDONLY );
+					       perror("open read");
 					       printf("%d\n",fd);
 					       readmode=1;
 					       break;
 					case 2:fd = open("./MyCharDev" , O_WRONLY);
+					       perror("open write");
 					       printf("%d\n",fd);
-					       if(fd <0)
-					       {
-						       puts("unable to open file in write mode");break;		
-					       }
 					       writemode = 1;
 					       break;
 					default : puts("Invalid choice file not opened");
 				}
 				break;
 			case 2 :
-				if(readmode == 1)
+				if( (readmode == 1) && (fd >0))
 				{
-					if(read(fd , msgbuf ,100) < 0)
+					if(read(fd , readbuf , 20) < 0)
 					{	
 						puts("unable to read data");break;
 					}
-					printf("msg read is \n%s\n",msgbuf);
+					printf("msg read is \n%s\n",readbuf);
 				}
 				else
 				{
@@ -55,9 +50,11 @@ int main()
 				}
 				break;
 			case 3 :
-				if(writemode == 1)
+				if( (writemode == 1) && (fd >0))
 				{	
-					if(write(fd , msg , 100) < 0)
+					int byteswritten=0;
+					byteswritten = write(fd , writebuf , strlen(writebuf));
+					if(byteswritten < 0)
 					{
 						puts("unable to write data");break;
 					}
@@ -70,6 +67,7 @@ int main()
 				break;
 			case 4:
 				close(fd);
+				printf("closed file fd = %d\n",fd);
 				readmode=writemode=0;
 				break;
 			case 5:

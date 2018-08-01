@@ -46,8 +46,7 @@ extern int size_of_registers;
 
 struct myQset 
 {
-	struct myQset *next;	
-	void **data;
+	char *data;
 };
 
 struct myDev 
@@ -61,7 +60,7 @@ struct myDev
 };
 
 
-int deletemydevices(void);
+extern int deletemydevices(void);
 int openDev(struct inode *, struct file *);
 int releaseDev(struct inode *, struct file *);
 ssize_t readDev(struct file *, char *, size_t, loff_t *);

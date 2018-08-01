@@ -46,6 +46,7 @@ static int __init MyCharDev_init(void)
 	printk(KERN_INFO "Major no = %d\tMinor No = %d\n",majorno,minorno);
 
 	myDevices = kmalloc(deviceno*sizeof(struct myDev) , GFP_KERNEL );
+	// If No memory is allocated for the device structure
 	if(!myDevices)
 	{
 		ret = -1;
@@ -61,7 +62,7 @@ static int __init MyCharDev_init(void)
 		err = cdev_add (&myDevices[i].cdev, Dev_Id, 1);
 
 		if (err)
-			printk(KERN_NOTICE "Error %d adding scull%d", err, i);
+			printk(KERN_NOTICE "Error %d adding scull %d", err, i);
 		printk(KERN_INFO "majorno:%d minorno:%d\n",MAJOR(Dev_Id) , MINOR(Dev_Id));
 	}
 
