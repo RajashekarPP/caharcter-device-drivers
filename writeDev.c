@@ -7,9 +7,9 @@ ssize_t writeDev(struct file *filep, const char __user *buff, size_t count, loff
 {
 
 	int i,k,ret;
-	int no_of_qsets , remno_of_quantums , byteswritten =0 ;//datasize = count;
-	struct myDev *device = NULL ;
-	struct myQset *head =NULL ; //head pointer used to store  the address of the first quantum set
+	int no_of_qsets , no_of_quantums , byteswritten =0 ;//datasize = count;
+	struct myDev *device ;
+	struct myQset *head ; //head pointer used to store  the address of the first quantum set
 
 	printk(KERN_INFO "BEGINS %s\n",__func__);
 	device = filep->private_data;
@@ -34,35 +34,21 @@ ssize_t writeDev(struct file *filep, const char __user *buff, size_t count, loff
 		no_of_qsets++;
 	}
 
-	// this calculation is only for data less than one qset size
-	/*
-	   if(count % size_of_registers)
-	   {
-	   remno_of_quantums++;
-	   }
-	 */
-
 	if( !head)
 	{
 		return -1;
 	}
-	/*
-	   for(i=0;i<no_of_qsets;i++)
-	   {
-	   for(
 
+	head->data = kmalloc ( no_of_registers * sizeof(char *) , GFP_KERNEL );
+	memset( head->data , 0 , no_of_registers *sizeof(char *));
 
-
-	   }
-	 */
-
-	remno_of_quantums = count/size_of_registers;
-	for(i=0;i<remno_of_quantums;i++)
+	no_of_quantums = count/size_of_registers;
+	for(i=0;i< 8;i++)
 	{
 		head->data[i] = kmalloc( no_of_registers*(sizeof(char*)) , GFP_KERNEL);
 	}
 
-	for(k=0 ; k<remno_of_quantums ;k++)
+	for(k=0 ; k< (count/size_of_registers) ;k++)
 	{
 		ret = copy_from_user( (char*)head->data[k] , buff+byteswritten , size_of_registers);
 		if(!ret)
