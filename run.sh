@@ -1,6 +1,6 @@
 #!/bin/bash
-#File Name : run
-#Author       : Raja Shekar 
+#File Name 	: run.sh
+#Author         : Raja Shekar 
 
 #user compilation in sequence
 
@@ -17,14 +17,14 @@
 		sudo insmod ./modules/MyCharDev.ko
 		echo -e "Modelu has been inserted\n"
 		lsmod | grep MyCharDev
-		dmesg tail -10
+		dmesg 
 		read 
-		cat /proc/devices
+		cat /proc/devices | grep MyCharDev
 		echo "please enter major number"
 		read major
 		echo "sudo mknod ./MyCharDev c major minor"
-		sudo mknod ./MyCharDev c $major 0
-		sudo chmod 666 MyCharDev
+		sudo mknod -m 666 ./MyCharDev c $major 0
+#		sudo chmod 666 MyCharDev
 		ls -l MyCharDev
 	fi	
 	read -p "Do u want to run the application :[y/n]" choice
@@ -33,9 +33,12 @@
 		echo "a.out file created"
 		./a.out
 		read
-		dmesg tail -n 10
+		dmesg 
 	fi
 	sudo rmmod MyCharDev
 	dmesg
 	unlink MyCharDev
+	echo -e "unlinking has been done\n"
+	make clean
+	rm a.out
 echo "running script is completed"
