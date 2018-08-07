@@ -7,6 +7,7 @@
 	read -p "do u want to compile the myapp.c :[y/n] :" choice
 	if [ $choice == 'y' ]; then
 		make clean
+		sudo dmesg -C
 			if (make)then
 			echo "compilation sucessful"
 			fi
